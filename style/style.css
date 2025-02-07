@@ -1,0 +1,129 @@
+*{
+    box-sizing: border-box;
+}
+
+.column1 {
+    float: left;
+    width: 70%;
+    padding: 10px;
+
+}
+
+.column2 {
+    float: left;
+    width: 30%;
+    padding: 10px;
+    max-width: 29%;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+@media screen and (max-width: 600px) {
+    .column1 {
+        width: 100%;
+    }
+    .column2 {
+        width: 96.7%;
+        max-width: 96.7%;
+        height: 100%;
+        /* margin-left: 10px; */
+        margin-right: 200px;
+    }
+
+    #mainCanvas{
+        max-height: 30vh;
+    }
+}
+
+body {
+    background: rgb(251, 251, 251);
+}
+
+#mainCanvas{
+    z-index: 1;
+    width: 100%;
+    height: 95vh;
+    background: #dddddd;
+    /* border: 1px solid #000000; */
+    outline: 1px solid #000000;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.30), 0 5px 5px rgba(0, 0, 0, .4);
+}
+
+.menu{
+    background: #ffffff;
+    margin-top: 10px;
+    /* border:5px solid #cccccc; */
+    outline: 1px solid #000000;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.30), 0 5px 5px rgba(0, 0, 0, .4);
+}
+
+.menu-row{
+    text-align: center;
+}
+
+.btn {
+    padding: 4px 12px;
+    margin-top: 5px;
+    min-width: 88px;
+    border: none;
+    font: inherit;
+    color: #000000;
+    outline: none;
+    text-decoration: none;
+    cursor: default;
+    background: #ffffff;
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.30), 0 1px 1px rgba(0, 0, 0, .4);
+}
+
+.title{
+    text-align: left;
+    font-weight: bold;
+}
+
+.btn:active {
+    font-weight: 800;
+    position: relative;
+}
+
+.ml{
+    margin-left: 15px;
+    margin-top: 5px;
+    text-align: left;
+} 
+.ml #canvas,
+.ml div{
+    text-align: center;
+}
+.ml p{
+    padding-left: 20px;
+}
+
+.mb{
+    margin-bottom: 10px;
+} 
+
+#mainContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#gui{
+    position: absolute;
+    top: 2%;
+    left: 2.5%;
+    /* display: flex; */
+    /* flex-direction: column; */
+    z-index: 3;
+    padding: 10px 10px 10px 10px;
+    /* background-color: rgba(255, 0, 0, 0.1);
+    border: 2px outset rgb(187, 68, 48); */
+   }
+    
+/* #gui{
+    height: 20vh;
+} */
