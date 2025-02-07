@@ -1,0 +1,43 @@
+{
+    "meshes":[
+        {
+            "name":"stanza",
+            "obj_source":"./data/stanza/stanza.obj",
+            "mtl_source":"./data/stanza/stanza.mtl",
+            "position": [0, 0, 0]
+        },
+
+        {
+            "name":"albero",
+            "obj_source":"./data/albero/christmasTree.obj",
+            "mtl_source":"./data/albero/christmasTree.mtl",
+            "position": [9, -3, 1]
+        },
+
+        {
+            "name":"regali",
+            "obj_source":"./data/regali/gift.obj",
+            "mtl_source":"./data/regali/gift.mtl",
+            "position": [8,-3, 1]
+        },
+
+        {
+            "name":"poltrona",
+            "obj_source":"./data/poltrona/poltrona.obj",
+            "mtl_source":"./data/poltrona/poltrona.mtl",
+            "position": [0,5, 1]
+        },
+        {
+            "name":"ghirlanda",
+            "obj_source":"./data/ghirlanda/ghirlanda.obj",
+            "mtl_source":"./data/ghirlanda/ghirlanda.mtl",
+            "position": [1,-5.5, 8]
+        },
+        {
+            "name":"quadro",
+            "obj_source":"./data/quadro/quadro.obj",
+            "mtl_source":"./data/quadro/quadro.mtl",
+            "position": [0,8.5, 7]
+        }
+    ]
+}
