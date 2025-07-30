@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Chiara Mengoli" />
+  <link rel="stylesheet" href="style.css">
+  <title>Relazione Computer Graphics</title>
+
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Relazione Computer Graphics</h1>
+<p class="author">Chiara Mengoli</p>
+<p class="date">A.A. 2024-2025</p>
+</header>
+<h1 id="indice">Indice</h1>
+<ul>
+<li><a href="#progetto">Progetto</a></li>
+<li><a href="#scene.js">Scena</a></li>
+<li><a href="#camera.js">Camera</a></li>
+<li><a href="#animated_camera.js">Animated Camera</a></li>
+<li><a href="#mesh_obj.js">Mesh Obj</a></li>
+<li><a href="#riferimenti">Particolarità, migliorie e riferimenti utilizzati</a></li>
+</ul>
+<hr />
+<h1 id="progetto">Progetto</h1>
+<p>Questo progetto è stato sviluppo come prova d’esame per il corso
+“Computer Graphics A.A. 2024/2025”. L’obbiettivo è sviluppare una
+“3D-WebApp” usando WebGL (HTML5, CSS e contesto webgl), linguaggio
+JavaScript e OpenGL ES SL. Il progetto consiste in un'applicazione web interattiva
+che permette di visualizzare una scena 3D composta da una serie di oggetti.</p>
+
+  <h3 id="struttura-del-progetto">Struttura del progetto</h3>
+  <ul>
+    <li>/project/
+      <ul>
+        <li>
+          <p><code class="language-plaintext highlighter-rouge">webapp.html</code>: è il file html dell’applicazione.</p>
+        </li>
+        <li>
+          <p><code class="language-plaintext highlighter-rouge">utils.js</code>: è il file che contiene funzioni di supporto.</p>
+        </li>
+        <li>
+          <p><code class="language-plaintext highlighter-rouge">main.js</code>: entry point del programma.</p>
+        </li>
+        <li>
+          <p><code class="language-plaintext highlighter-rouge">/data</code>: è una cartella che contiene, in apposite sottocartelle, i file .obj e .mtl delle mesh presenti in scena e le immagini delle texture.</p>
+        </li>
+        <li>
+          <p><code class="language-plaintext highlighter-rouge">/lib</code>: è una cartella che contiene i file di script .js.<br>
+  Alcuni sono le librerie viste all’interno del corso:</p>
+          <ul>
+            <li><em>dat.gui.js</em></li>
+            <li><em>glm_utils.js</em></li>
+            <li><em>jquery-3.6.0.js</em></li>
+            <li><em>load_mesh.js</em></li>
+            <li><em>m4.js</em></li>
+            <li><em>mesh_utils.js</em></li>
+            <li><em>webgl-utils.js</em></li>
+          </ul>
+        </li>
+        <li>
+          <p><code class="language-plaintext highlighter-rouge">/style</code>: è una cartella che contiene il file .css .</p>
+        </li>
+        <li>
+          <p><code class="language-plaintext highlighter-rouge">/scene</code>: è una cartella che contiene i file .js per costruire la scena e gestire la camera. </p>
+          <ul>
+            <li><em>animated_camera.js:</em>  camera 3D che si muove automaticamente.</li>
+            <li><em>camera.js:</em>  classe che si occupa di gestire la camera e i suoi movimenti.</li>
+            <li><em>meshObj.js:</em> classe per la gestione degli oggetti da disegnare.</li>
+            <li><em>scene.js:</em> contiene la classe principale che gestisce tutte le altre e permette di costruire la scena.</li>
+            <li><em>scene.json:</em> sono definite le mesh da caricare</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+  
+
+
+<h1 id="mesh">Mesh</h1>
+  <figure>
+    <img src="img/scene.png" alt="Rendering della scena" />
+    <figcaption aria-hidden="true">Rendering della scena</figcaption>
+  </figure>
+  <h3 id="importazione-e-disegno">Importazione e disegno</h3>
+  <p>La scena dell&#39;applicazione è composta da diverse Mesh che vengono importate da altrettanti file in formato <u>Wavefront OBJ</u>. 
+    Alcune mesh come la poltrona, la tazza e il tavolino sono state reperite online e modificate su  <u>Blender</u>, le altre invece sono state create su Blender e poi esportate.
+
+
+  <h3 id="utilizzo-di-blender-">Utilizzo di Blender <img src="img/blender-logo-vector.png" alt="blenderLogo" align="right" width="250" height="150"></h3>
+  <p>Quasi tutte le mesh che ho recuperato online si presentavano in posizioni, dimensioni e orientamenti  diversi da quelli che desideravo.<br>
+  Per ridurre le operazioni di trasformazione nel codice della mia applicazione ho importato le mesh originali sul software Blender e ne ho definito la geometria iniziale (centrandole nell&#39;origine degli assi, orientandole nel verso desiderato con delle rotazioni, rimpicciolendole…).<br>
+  Per alcune mesh ho sfruttato Blender anche per modificarne i colori e le texture.</p>
+
+<h1 id="interazione-utente">Interazione Utente</h1>
+<p>
+  <div class="row">
+    <div class="column">
+      <figure>
+        <img src="img/panel.png" alt="Interfaccia dell&#39;applicazione" height="350"/>
+        <figcaption aria-hidden="true">Interfaccia dell&#39;applicazione</figcaption>
+      </figure>
+      </div>
+      <div class="column">
+      <figure>
+        <img src="img/settings.png" alt="Impostazioni" height="350"/>
+        <figcaption aria-hidden="true">Impostazioni</figcaption>
+      </figure>
+    </div>
+  </div>
+  L&#39;interfaccia dell&#39;applicazione si presenta in due elementi, il canvas per il disegno
+  e una colonna con i controlli utente; all'interno del canvas troviamo anche una colonna a comparsa per le impostazioni.</p>
+  <p>Il menù per le impostazioni del progetto è stato realizzato
+  utilizzando <a href="https://github.com/dataarts/dat.gui">dat.GUI</a>
+  .</p>
+  <p>Il movimento della scena può essere gestito attraverso la tastiera
+  oppure tramite touch.</p>
+  <p>I comandi da tastiera e il touch pad sono visibili espandendo il menù
+  laterale "pannello di controllo"; per il touch pad è stato inserito un canvas 2D con
+  disegnati alcuni pulsanti che permettono i vari movimenti.</p>
+  <p>È anche possibile, con mouse o tocco sul canvas,
+  ruotare la camera nella varie direzioni.</p>
+  <p><a href="#indice">Torna all’indice</a></p>
+  <hr />
+
+<h2 id="scene.js">scene.js</h2>
+<p>Rappresenta la classe principale che si occupa di tutte le
+operazioni, dall&#39;inizializzazione del canvas e della scena al rendering.</p>
+<p>Quando viene creato un nuovo oggetto della scena vengono eseguite le
+seguenti operazioni:</p>
+<ul>
+<li>viene preso il WebGL rendering context dal canvas</li>
+<li>impostazione delle dimensioni della viewport</li>
+<li>compilazione di vertex e fragment shader</li>
+<li>lettura di un <strong>file json</strong> per ottenere la lista delle
+mesh da mostrare.</li>
+<li>per ogni elemento mesh nel file json viene creato un nuovo
+<strong>mesh_obj</strong> e salvato in una lista interna all&#39;oggetto
+scena.</li>
+<li>inizializzazione di <strong>camera</strong>, <strong>keys</strong>
+(struttura per la gestione dei tasti della tastiera) e
+<strong>light</strong> (oggetto luce di scena)</li>
+</ul>
+<p>L&#39;utilizzo di una classe che contiene tutte le principali variabili
+da utilizzare ha permesso di ridurre e semplificare il codice da
+scrivere, potendo usare le stesse variabili da passare alle mesh, senza
+dover ricalcolare le stesse cose più volte.</p>
+<p>Le mesh da visualizzare sono salvate in file json caricato all&#39;avvio;
+così facendo posso creare scene diverse semplicemente utilizzando file
+json diversi.</p>
+<p>Di seguito viene riportato un esempio di come è scritto un oggetto
+mesh in una scena:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>  <span class="er">&quot;meshes&quot;:</span><span class="ot">[</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span><span class="st">&quot;mesh_1&quot;</span><span class="fu">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;obj_source&quot;</span><span class="fu">:</span><span class="st">&quot;./path/mesh.obj&quot;</span><span class="fu">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;mtl_source&quot;</span><span class="fu">:</span><span class="st">&quot;./path/mesh&quot;</span><span class="fu">,</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;position&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="dv">0</span><span class="ot">,</span> <span class="dv">0</span><span class="ot">,</span> <span class="dv">0</span><span class="ot">]</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span></code></pre></div>
+<p>Per ogni mesh nella lista vengono scritte le seguenti proprietà:</p>
+<ul>
+<li><strong>name:</strong> nome della mesh, usato solo per identificare
+le singole mesh e debug</li>
+<li><strong>obj_source:</strong> path al file .obj</li>
+<li><strong>mtl_source:</strong> path al file .mtl</li>
+<li><strong>position:</strong> posizione iniziale della mesh.</li>
+</ul>
+<p>I valori in <strong>position</strong> vengono sommati alle coordinate
+della geometria dell&#39;oggetto, traslandolo così nella posizione
+desiderata.</p>
+
+<h3 id="metodi">Metodi</h3>
+<h4 id="async-load_mesh_jsonjson_path">async
+load_mesh_json(json_path)</h4>
+<p>Si occupa di leggere un file json contenente gli oggetti di scena; ciascuno oggetto viene poi passato a un costruttore di mesh_obj e
+salvato poi in <code>scene.mesh_list</code>.</p>
+<h4 id="projectionmatrix">projectionMatrix()</h4>
+<p>Calcola la matrice di proiezione utilizzando la funzione
+perspective della libreria m4.js.</p>
+<h4 id="key_controller">key_controller()</h4>
+<p>Funzione che legge gli input da tastiera e chiama le funzioni di
+movimento della camera corrispondente. La funzione è stata realizzata in
+modo tale da permettere di fare più movimenti in contemporanea. Viene
+richiamata ogni volta che deve essere disegnato un frame.</p>
+<h4 id="switch_camera">switch_camera()</h4>
+<p>Passa dalla camera libera a quella animata e viceversa.</p>
+<h4 id="async-prepareskybox">async prepareSkybox()</h4>
+<p>Funzione che si occupare di caricare la cubemap texture per lo
+skybox. Tutti i dati dello skybox sono salvati in
+<code>scene.skybox</code>.</p>
+<h4 id="toggle_skybox">toggle_skybox()</h4>
+<p>Attiva o disattiva lo skybox cambiando il valore di
+<code>scene.skybox.enable</code>. Se impostato a false, la fase di
+disegno dello skybox viene saltata.</p>
+<h4 id="async-prepareshadow">async prepareShadow()</h4>
+<p>Funzione che si occupa della preparazione dei dati per la gestione
+delle ombre.</p>
+<ul>
+<li>compilazione shaders corrispondenti</li>
+<li>creazione di una texture utilizzata come depth map</li>
+<li>impostazione dei valori utilizzati in fase di rendering.</li>
+</ul>
+<h4 id="toggle_shadows">toggle_shadows()</h4>
+<p>Passa dal programma shader con ombre a quello senza e viceversa.</p>
+<h4 id="draw">draw()</h4>
+<p>Funzione separata dalla classe Scene per questioni di scope. Esegue
+le seguenti operazioni:</p>
+<ul>
+<li>ridimensiona canvas e viewport in base alla grandezza della
+finestra.</li>
+<li>chiama <code>scene.key_controller()</code> per la gestione degli
+input da tastiera.</li>
+<li>calcola la matrice di proiezione e vista.</li>
+<li>la matrice di vista viene ottenuta da <code>scene.camera</code> che
+può essere un oggetto <code>Camera</code> o
+<code>Animated_Camera</code>.</li>
+<li>a seconda del valore di <code>scene.shadow.enable</code>:
+<ul>
+<li>esegue il rendering della scena con ombre.</li>
+<li>esegue il rendering della scena senza ombre.</li>
+</ul></li>
+<li>a seconda del valore di <code>scene.skybox.enable</code> disegna o
+meno lo skybox.</li>
+</ul>
+<p>Per il render è stato attivato <code>gl.BLEND</code> quindi, se un
+materiale di un oggetto ha opacità minore di uno, questo verrà disegnato
+con una trasparenza.</p>
+
+
+<h3 id="renering">Rendering</h3>
+
+  <p>La scene disegnata con il rendering base ha queste
+  caratteristiche:</p>
+  <ul>
+  <li>supporto per texture e colori</li>
+  <li>luce diffusa</li>
+  <li>specular lightning</li>
+  </ul>
+  <figure>
+  <img src="img/scene.png" title="Scena disegnata con rendering base"
+  alt="Rendering base" />
+  <figcaption aria-hidden="true">Rendering base</figcaption>
+  </figure>
+  <h4 id="rendering-con-ombre">Rendering con ombre</h4>
+  <p>La tecnica di rendering avanzato che ho scelto per il mio progetto
+  sono le ombre, realizzate con tecnica di shadowmapping.</p>
+  <p>Per poter generare le ombre la scena viene disegnata due volta, prima
+  dal punto di vista della luce per generare una shadowmap, poi dal punto
+  di vista dell&#39;osservatore utilizzando la shadowmap generata per capire
+  se un punto è in ombra o meno.</p>
+  <figure>
+  <img src="img/scene_shadow.png" title="Stessa scena disegnata con le ombre"
+  alt="Rendering con ombre" />
+  <figcaption aria-hidden="true">Rendering con ombre</figcaption>
+  </figure>
+  <p><a href="#indice">Torna all&#39;indice</a></p>
+  <hr />
+<h2 id="camera.js">camera.js</h2>
+<p>Questa camera permette un movimento nelle spazio 3D libero. L&#39;orientamento della
+camera è definito dai tre assi ortogonali, in cui ogni asse è un vettore
+in coordinate globali.</p>
+<ul>
+<li><strong>position:</strong> posizione nello spazio della camera.</li>
+<li><strong>forward:</strong> vettore che punta davanti la camera.</li>
+<li><strong>right:</strong> vettore che punta alla destra della
+camera.</li>
+<li><strong>up:</strong> vettore che punta verso l&#39;alto.</li>
+</ul>
+<h3 id="metodi-1">Metodi</h3>
+<h4 id="tiltstep">tilt(step)</h4>
+<p>Ruota la visuale della camera in alto o in basso. Il movimento
+si ottiene sul vettore right.</p>
+<h4 id="panstep">pan(step)</h4>
+<p>Ruota la visuale della camera orizzontalmente rispetto alla
+posizione dell&#39;occhio della camera. Si ottiene ruotando il vettore
+up.</p>
+<h4 id="cantstep">cant(step)</h4>
+<p>Inclina la camera lateralmente mantenendone la posizione e la
+direzione di visualizzazione. Si ottiene ruotando il vettore
+forward.</p>
+<h4 id="truckdist">truck(dist)</h4>
+<p>Sposta la posizione della camera lateralmente (sinistra o
+destra) mentre la direzione della visuale della camera è invariata.
+Si ottiene sommando il vettore right, moltiplicato per
+<code>dist</code>, alla posizione attuale della camera.</p>
+<h4 id="pedestaldist">pedestal(dist)</h4>
+<p>Eleva o abbassa la camera. Si ottiene sommando la posizione al
+vettore up.</p>
+<h4 id="dollystep">dolly(step)</h4>
+<p>Avvicina o allontana la camera dalla posizione che sta
+guardando. Risultato della somma della posizione con il vettore
+forward.</p>
+<h4 id="realign">realign()</h4>
+<p>Riallinea la vista della camera con l&#39;orizzonte.</p>
+<h4 id="getviewmatrix">getViewMatrix()</h4>
+<p>Calcola e restituisce la viewMatrix</p>
+<h4 id="getposition">getPosition()</h4>
+<p>Calcola e restituisce la viewMatrix</p>
+<p><a href="#indice">Torna all&#39;indice</a></p>
+<hr />
+
+<h2 id="animated_camera.js">animated_camera.js</h2>
+<p>La camera animata, a differenza della precedente, si muove in maniera
+automatica lungo un quarto di circonferenza, rimanendo fissa a guardare
+il centro della scena.</p>
+<p>Per compatibilità, reimplementa tutti i metodi di
+<code>camera.js</code>.</p>
+<figure>
+<img src="animated_camera.gif" title="Movimento in una scena"
+alt="Movimento della camera" />
+<figcaption aria-hidden="true">Movimento della camera</figcaption>
+</figure>
+<p>La posizione sulla circonferenza è determinata da due valori:</p>
+<ul>
+<li><strong>radius:</strong> rappresenta il raggio della circonferenza
+sui cui ci si muove.</li>
+<li><strong>angle:</strong> rappresenta l&#39;angolo della posizione
+attuale.</li>
+</ul>
+<p>Le coordinate x e z vengono ottenuto utilizzando le coordinate polari
+con radius e angle.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">position</span>[<span class="dv">0</span>] <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">sin</span>(rad) <span class="op">*</span> <span class="kw">this</span><span class="op">.</span><span class="at">radius</span><span class="op">;</span>     <span class="co">// X</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">position</span>[<span class="dv">2</span>] <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">cos</span>(rad) <span class="op">*</span> <span class="kw">this</span><span class="op">.</span><span class="at">radius</span><span class="op">;</span>     <span class="co">// Z</span></span></code></pre></div>
+<p>La ViewMatrix viene ottenuta con questa funzione:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">getViewMatrix</span>() {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>            <span class="kw">this</span><span class="op">.</span>#<span class="fu">move</span>()<span class="op">;</span>  <span class="co">// Funzione per aggiornare la posizione</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>            <span class="kw">const</span> look <span class="op">=</span> [<span class="dv">0</span><span class="op">,</span><span class="dv">1</span><span class="op">,</span><span class="dv">0</span>] <span class="co">// Direzione camera, rimane sempre fissa</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>            <span class="kw">const</span> cameraMatrix <span class="op">=</span> m4<span class="op">.</span><span class="fu">lookAt</span>(<span class="kw">this</span><span class="op">.</span><span class="at">position</span><span class="op">,</span> look<span class="op">,</span> [<span class="dv">0</span><span class="op">,</span><span class="dv">1</span><span class="op">,</span><span class="dv">0</span>])<span class="op">;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> m4<span class="op">.</span><span class="fu">inverse</span>(cameraMatrix)<span class="op">;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    }</span></code></pre></div>
+<p><a href="#indice">Torna all’indice</a></p>
+<hr />
+
+<h2 id="mesh_obj.js">meshObj.js</h2>
+<p>Questa classe si occupa di tutti le funzionalità delle mesh visibili
+nella scena, dal loro caricamento al render. Il costruttore prende in input un
+oggetto che corrisponde ad una mesh definita nel file scene.json,
+contenente tutte le informazioni relative, come:</p>
+<ul>
+<li>path per il file .obj</li>
+<li>path per il file .mtl</li>
+<li>posizione dell&#39;oggetto rispetto all&#39;origine</li>
+</ul>
+<p>Gli oggetti sono salvati nella cartella <code>project/data</code> e
+sono stati tutti disegnati su Blender e poi esportati nel formato
+<code>.obj</code>. I file originali <code>.blend</code> sono salvati
+insieme ai <code>.obj</code></p>
+<h3 id="metodi-2">Metodi</h3>
+<h4 id="prepare_meshgl">prepare_mesh(gl)</h4>
+<p>Funzione chiamata dal costruttore dopo che viene letto il file obj.
+Si occupa della creazione dei buffer, utilizzando la funzione
+<code>webglUtils.createBufferInfoFromArrays(gl, data)</code>, per le
+varie componenti della mesh.</p>
+<h4 id="rendergl-programinfo-uniforms">render(gl, programInfo,
+uniforms)</h4>
+<p>Funzione che disegna l&#39;oggetto utilizzando il programma e le uniform
+specificate nei parametri. Viene chiamata dalla funzione render che si
+occupa di scegliere programInfo e uniform a seconda del tipo di
+rendering scelto. Avendo program e uniforms parametrizzati la funzione
+di rendering è unica per tutti le modalità di disegno.</p>
+<p><a href="#indice">Torna all&#39;indice</a></p>
+<hr />
+
+
+<h1 id="particolarità">Particolarità</h1>
+
+Per la realizzazione del'albero di natale, e dei reagli  ho seguito un tutorial su Youtube.
+<a href="https://www.youtube.com/watch?v=9fCWQe9MkYs">Christmas Tree 🎄 Part 1 (Blender Tutorial)</a>
+<a href="https://www.youtube.com/watch?v=-ybwVTlpIus">Christmas Tree 🎄 Part 2 (Blender Tutorial)</a>
+<a href="https://www.youtube.com/watch?v=GsKEC3LXBtM">Christmas Tree 🎄 Part 3 (Blender Tutorial)</a>
+
+
+<h1 id="migliorie-future">Migliorie future</h1>
+<ul>
+  <li>Inserire le luci di natale e renderle interattive, accenderle e spegnere tramite un pulsante</li>
+  <li>Fuoco nel camino o la fiamme nelle candele. Su Blendere ero riuscita ad inserire l'effetto del fuoco 
+    ma una volta importata la mesh all'interno della scena l'elemento () utilizzato non si visualizzava.</li>
+</ul>
+
+
+<h1 id="riferimenti">Riferimenti</h1>
+<p>Per la realizzazione del progetto, oltre alle slide ho fatto riferimento ai seguenti articoli:</p>
+<ul>
+  <li><a href="https://www.youtube.com/playlist?list=PLsGl9GczcgBvYOAEE30pfCwKqzzAcSluh">Christmas Tree (Blender Tutorial)</a></li>
+<li><a
+href="http://learnwebgl.brown37.net/07_cameras/camera_introduction.html">Learn
+WebGL: Introduction to camera</a></li>
+<li><a
+href="https://webglfundamentals.org/webgl/lessons/webgl-3d-camera.html">WebGl
+Fundamentals: 3D Camera</a></li>
+<li><a
+href="https://webglfundamentals.org/webgl/lessons/webgl-load-obj-w-mtl.html">WebGL
+Fundamentals: Loading .obj with Mtl</a></li>
+<li><a
+href="https://webglfundamentals.org/webgl/lessons/webgl-shadows.html">WebGL
+Fundamentals: Shadows</a></li>
+</ul>
+<p><a href="#indice">Torna all’indice</a></p>
+<hr />
+</body>
+</html>

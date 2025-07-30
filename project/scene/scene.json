@@ -2,8 +2,8 @@
     "meshes":[
         {
             "name":"stanza",
-            "obj_source":"./data/stanza/stanza2.obj",
-            "mtl_source":"./data/stanza/stanza2.mtl",
+            "obj_source":"./data/stanza/stanza.obj",
+            "mtl_source":"./data/stanza/stanza.mtl",
             "position": [0, 0, 0]
         },
 
@@ -23,8 +23,8 @@
 
         {
             "name":"poltrona",
-            "obj_source":"./data/poltrona/poltrona2.obj",
-            "mtl_source":"./data/poltrona/poltrona2.mtl",
+            "obj_source":"./data/poltrona/poltrona.obj",
+            "mtl_source":"./data/poltrona/poltrona.mtl",
             "position": [0,5, 1]
         },
         {
